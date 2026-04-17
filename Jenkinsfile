@@ -24,7 +24,10 @@ pipeline {
         stage('Docker Build') {
     steps {
         sh '''
-        eval $(minikube -p minikube docker-env)
+        export PATH=$PATH:/usr/local/bin
+
+        /usr/local/bin/minikube status || /usr/local/bin/minikube start
+        eval $(/usr/local/bin/minikube -p minikube docker-env)
 
         docker build -t customer-service ./customer-service
         docker build -t billing-service ./billing-service
