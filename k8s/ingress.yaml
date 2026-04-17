@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: telecom-ingress
+  namespace: telecom
+spec:
+  rules:
+  - host: telecom.local
+    http:
+      paths:
+      - path: /customers
+        pathType: Prefix
+        backend:
+          service:
+            name: customer-service
+            port:
+              number: 80
+
+      - path: /billing
+        pathType: Prefix
+        backend:
+          service:
+            name: billing-service
+            port:
+              number: 80
+
+      - path: /plans
+        pathType: Prefix
+        backend:
+          service:
+            name: plan-service
+            port:
+              number: 80
