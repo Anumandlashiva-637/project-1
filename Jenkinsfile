@@ -5,35 +5,30 @@ pipeline {
         maven 'Maven'
     }
 
-    environment {
-        IMAGE_NAME = "telecom-app"
-    }
-
     stages {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/Anumandlashiva-637/project-1.git'
+                git 'https://github.com/Anumandlashiva-637/project-1.git/telecom-devops-project.git'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonar-server') {
-                    sh 'mvn sonar:sonar'
-                }
+                sh 'mvn -f customer-service/pom.xml clean package'
+                sh 'mvn -f billing-service/pom.xml clean package'
+                sh 'mvn -f plan-service/pom.xml clean package'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t customer-service ./customer-service'
+                sh '''
+                eval $(minikube docker-env)
+                docker build -t customer-service ./customer-service
+                docker build -t billing-service ./billing-service
+                docker build -t plan-service ./plan-service
+                '''
             }
         }
 
