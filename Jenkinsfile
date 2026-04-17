@@ -22,15 +22,16 @@ pipeline {
         }
 
         stage('Docker Build') {
-            steps {
-                sh '''
-                eval $(minikube docker-env)
-                docker build -t customer-service ./customer-service
-                docker build -t billing-service ./billing-service
-                docker build -t plan-service ./plan-service
-                '''
-            }
-        }
+    steps {
+        sh '''
+        eval $(minikube -p minikube docker-env)
+
+        docker build -t customer-service ./customer-service
+        docker build -t billing-service ./billing-service
+        docker build -t plan-service ./plan-service
+        '''
+    }
+}
 
         stage('Deploy to Kubernetes') {
             steps {
